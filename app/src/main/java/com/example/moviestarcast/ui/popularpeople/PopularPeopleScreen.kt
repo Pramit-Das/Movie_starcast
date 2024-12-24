@@ -44,6 +44,13 @@ fun PopularPeopleScreen(viewModel: MovieStarViewModel, onPersonClick: (Int) -> U
     val isLoading by viewModel.isLoading.observeAsState(false)
     val currentPage by viewModel.currentPage.observeAsState(1)
 
+    // Trigger initial data load when the screen is displayed
+    LaunchedEffect(Unit) {
+        if (people.isEmpty() && searchQuery.isEmpty()) {
+            viewModel.loadPopularPeople(1)
+        }
+    }
+
     Scaffold(topBar = {
         TopAppBar(title = { Text("Popular People") })
     }) { padding ->
@@ -66,11 +73,16 @@ fun PopularPeopleScreen(viewModel: MovieStarViewModel, onPersonClick: (Int) -> U
                     focusedTextColor = MaterialTheme.colorScheme.onSurface
                 )
             )
+
+
             LazyColumn(modifier = Modifier.padding(8.dp)) {
-                if(people.isEmpty()){
-                    viewModel.loadPopularPeople(1)
-                }
-                items(people) { actor ->
+                itemsIndexed(people) { index, actor ->
+
+                    // Load next page when last item is reached
+                    if (index == people.size - 1 && !isLoading) {
+                        viewModel.loadPopularPeople(currentPage + 1)
+                    }
+
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -89,7 +101,7 @@ fun PopularPeopleScreen(viewModel: MovieStarViewModel, onPersonClick: (Int) -> U
                             )
                             Spacer(modifier = Modifier.width(16.dp))
                             Text(
-                                text = actor.name,
+                                text = "Name: "+ actor.name,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -97,19 +109,6 @@ fun PopularPeopleScreen(viewModel: MovieStarViewModel, onPersonClick: (Int) -> U
                     }
                 }
 
-            }
-
-            LaunchedEffect(Unit) {
-                viewModel.loadPopularPeople(currentPage)
-            }
-
-            val lazyListState = rememberLazyListState()
-            LazyColumn(state = lazyListState) {
-                itemsIndexed(people) { index, _ ->
-                    if (index == people.lastIndex && !isLoading) {
-                        viewModel.loadPopularPeople(currentPage + 1)
-                    }
-                }
             }
         }
     }

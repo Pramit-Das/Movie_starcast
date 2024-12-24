@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviestarcast.model.Actor
+import com.example.moviestarcast.model.ActorDetailsResponse
+import com.example.moviestarcast.model.ImageProfile
 import com.example.moviestarcast.repository.MovieStarRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,13 +26,25 @@ class MovieStarViewModel @Inject constructor(private val repository: MovieStarRe
     private val _currentPage = MutableLiveData(1)
     val currentPage: LiveData<Int> = _currentPage
 
+    private var isLastPage = false
+
+
     fun loadPopularPeople(page: Int) {
+        if (_isLoading.value == true || isLastPage) return // Prevent multiple concurrent requests
         _isLoading.value = true
+
         viewModelScope.launch {
             try {
                 val response = repository.getPopularPeople(page)
-                _popularPeople.value = (_popularPeople.value ?: emptyList()) + response.results
-                _currentPage.value = page
+                if (response.results.isNotEmpty()) {
+                    _popularPeople.value = (_popularPeople.value ?: emptyList()) + response.results
+                    _currentPage.value = response.page
+                }
+                if (response.page >= response.total_pages) {
+                    isLastPage = true
+                }
+            } catch (e: Exception) {
+                // Handle exception
             } finally {
                 _isLoading.value = false
             }
@@ -42,13 +56,36 @@ class MovieStarViewModel @Inject constructor(private val repository: MovieStarRe
         _currentPage.value = 1
     }
 
-    fun searchPeople(query: String, page: Int) = viewModelScope.launch {
-        val response = repository.searchPeople(query, page)
-        _popularPeople.value = response.results
+    fun searchPeople(query: String, page: Int) {
+        if (_isLoading.value == true) return // Prevent multiple concurrent requests
+        _isLoading.value = true
+
+        viewModelScope.launch {
+            try {
+                val response = repository.searchPeople(query, page)
+                if (page == 1) {
+                    _popularPeople.value = response.results
+                } else {
+                    _popularPeople.value = (_popularPeople.value ?: emptyList()) + response.results
+                }
+                if (response.page >= response.total_pages) {
+                    isLastPage = true
+                }
+            } catch (e: Exception) {
+                // Handle exception
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
 
     fun setSearchQuery(query: String) {
-        _searchQuery.value = query
+        if (_searchQuery.value != query) {
+            _searchQuery.value = query
+            _popularPeople.value = emptyList() // Reset the people list
+            isLastPage = false
+            loadPopularPeople(1) // Reset and reload
+        }
     }
 
 }

@@ -12,7 +12,7 @@ interface MovieStarApi {
     suspend fun getPopularActors(@Query("page") page: Int): PopularActorsResponse
 
     @GET("search/person")
-    suspend fun searchActor(@Query("query") query: String, @Query("page") page: Int): PopularActorsResponse
+    suspend fun searchActor(@Query("query") query: String, @Query("include_adult") include_adult: Boolean,@Query("language") language: String,@Query("page") page: Int): PopularActorsResponse
 
     @GET("person/{person_id}")
     suspend fun getPersonDetails(@Path("person_id") id: Int): ActorDetailsResponse
