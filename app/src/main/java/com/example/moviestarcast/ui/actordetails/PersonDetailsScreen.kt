@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -78,7 +81,7 @@ fun PersonDetailsScreen(viewModel: PersonDetailsViewModel) {
                         )
                     }
                 }
-                LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.padding(8.dp)) {
+                LazyVerticalGrid(columns = GridCells.Fixed(3), modifier = Modifier.padding(8.dp)) {
                     items(images) { image ->
                         Card(
                             modifier = Modifier.padding(8.dp),
@@ -88,7 +91,7 @@ fun PersonDetailsScreen(viewModel: PersonDetailsViewModel) {
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w500${image.file_path}",
                                 contentDescription = null,
-                                modifier = Modifier.size(100.dp)
+                                modifier = Modifier.width(300.dp).height(300.dp)
                             )
                         }
                     }

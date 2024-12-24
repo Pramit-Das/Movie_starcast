@@ -81,10 +81,14 @@ class MovieStarViewModel @Inject constructor(private val repository: MovieStarRe
 
     fun setSearchQuery(query: String) {
         if (_searchQuery.value != query) {
-            _searchQuery.value = query
-            _popularPeople.value = emptyList() // Reset the people list
-            isLastPage = false
-            loadPopularPeople(1) // Reset and reload
+            if (query.isNotEmpty()) {
+                _searchQuery.value = query
+                _popularPeople.value = emptyList() // Reset the people list
+                isLastPage = false
+                searchPeople(_searchQuery.value!!, 1)
+            }else {
+                loadPopularPeople(1) // Reset and reload
+            }
         }
     }
 
