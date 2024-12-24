@@ -9,10 +9,10 @@ import retrofit2.http.Query
 
 interface MovieStarApi {
     @GET("person/popular")
-    suspend fun getPopularPeople(@Query("page") page: Int): PopularActorsResponse
+    suspend fun getPopularActors(@Query("page") page: Int): PopularActorsResponse
 
     @GET("search/person")
-    suspend fun searchPeople(@Query("query") query: String, @Query("page") page: Int): PopularActorsResponse
+    suspend fun searchActor(@Query("query") query: String, @Query("page") page: Int): PopularActorsResponse
 
     @GET("person/{person_id}")
     suspend fun getPersonDetails(@Path("person_id") id: Int): ActorDetailsResponse
