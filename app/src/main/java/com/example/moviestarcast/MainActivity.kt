@@ -15,10 +15,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.moviestarcast.ui.actordetails.PersonDetailsScreen
 import com.example.moviestarcast.ui.popularpeople.PopularPeopleScreen
 import com.example.moviestarcast.ui.splash.SplashScreen
 import com.example.moviestarcast.ui.theme.MovieStarcastTheme
 import com.example.moviestarcast.viewmodel.MovieStarViewModel
+import com.example.moviestarcast.viewmodel.PersonDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,6 +37,15 @@ class MainActivity : ComponentActivity() {
                 composable("main") {
                     PopularPeopleScreen(viewModel = hiltViewModel()) { personId ->
                         navController.navigate("details/$personId")
+                    }
+                }
+
+                composable("details/{personId}") { backStackEntry ->
+                    val personId = backStackEntry.arguments?.getString("personId")?.toIntOrNull()
+                    personId?.let {
+                        val viewModel: PersonDetailsViewModel = hiltViewModel()
+                        viewModel.loadPersonDetails(it)
+                        PersonDetailsScreen(viewModel = viewModel)
                     }
                 }
 
