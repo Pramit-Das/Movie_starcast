@@ -1,0 +1,1 @@
+This app uses the [TMDB](https://developers.themoviedb.org/3) API to display popular people (actors, directors, etc.), allow searching, and show detailed information about selected individuals. The app follows modern Android development practices like MVVM architecture, livedata, Jetpack Compose, Hilt, and Retrofit.
