@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.example.moviestarcast"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.moviestarcast"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -63,6 +64,10 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation ("androidx.compose.animation:animation:1.6.0")
+    implementation ("androidx.navigation:navigation-compose:2.5.3")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
 
 }
 

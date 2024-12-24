@@ -11,37 +11,35 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.moviestarcast.ui.popularpeople.PopularPeopleScreen
+import com.example.moviestarcast.ui.splash.SplashScreen
 import com.example.moviestarcast.ui.theme.MovieStarcastTheme
+import com.example.moviestarcast.viewmodel.MovieStarViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MovieStarcastTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "splash") {
+                composable("splash") {
+                    SplashScreen { navController.navigate("main") }
                 }
+                composable("main") {
+                    PopularPeopleScreen(viewModel = hiltViewModel()) { personId ->
+                        navController.navigate("details/$personId")
+                    }
+                }
+
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MovieStarcastTheme {
-        Greeting("Android")
-    }
-}
