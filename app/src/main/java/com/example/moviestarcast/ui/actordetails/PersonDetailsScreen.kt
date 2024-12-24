@@ -81,7 +81,7 @@ fun PersonDetailsScreen(viewModel: PersonDetailsViewModel) {
                         )
                     }
                 }
-                LazyVerticalGrid(columns = GridCells.Fixed(3), modifier = Modifier.padding(8.dp)) {
+                LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.padding(8.dp)) {
                     items(images) { image ->
                         Card(
                             modifier = Modifier.padding(8.dp),
@@ -91,7 +91,7 @@ fun PersonDetailsScreen(viewModel: PersonDetailsViewModel) {
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w500${image.file_path}",
                                 contentDescription = null,
-                                modifier = Modifier.width(300.dp).height(300.dp)
+                                modifier = Modifier.width(200.dp).height(200.dp)
                             )
                         }
                     }
